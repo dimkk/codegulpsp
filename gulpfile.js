@@ -1,4 +1,4 @@
-var gulp = require('gulp'),
+var gulp = require('gulp'), //подключаем необходимые зависимости
 	sourcemaps = require('gulp-sourcemaps'),
   spsave = require('gulp-spsave'),
 	concat = require('gulp-concat'),
@@ -6,34 +6,34 @@ var gulp = require('gulp'),
   uglify = require('gulp-uglify'),
   del = require('del');
 	
-gulp.task('src', function () {
-  return gulp.src(['./src/**/*.js'])
-    .pipe(sourcemaps.init())
-    .pipe(concat('myapp.js'))
-    .pipe(uglify())
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('./dist'))
+gulp.task('src', function () { //Задача сборки исходников
+  return gulp.src(['./src/**/*.js']) //возьмём все файлы js в папке src и подпапках
+    .pipe(sourcemaps.init()) //старт записи sourcemaps
+    .pipe(concat('myapp.js')) //собираем файлы в 1
+    .pipe(uglify()) //минифицируем
+    .pipe(sourcemaps.write()) //пишем sourcemaps
+    .pipe(gulp.dest('./dist')) //возвращаем результат в dist
 });
 
-gulp.task('other', function () {
+gulp.task('other', function () { //задача копирования остальных файлов из папки src
   return gulp.src(['!./src/**/*.js', './src/**/*'])
     .pipe(gulp.dest('./dist'))
 });
 
-gulp.task('clean', function(){
+gulp.task('clean', function(){ //стирает содержимое папки dist
   return del(['./dist/**/*']);
 });
 
-gulp.task("copyToSharePoint", ["clean", "src", "other"], function () {
+gulp.task("copyToSharePoint", ["clean", "src", "other"], function () { //Задача сборки и копирования файлов в SharePoint
   return gulp.src("./dist/**/*")
-    .pipe(spsave({
-      username: config.username,
+    .pipe(spsave({ //плагин позволяющий авторизовываться и записывать файлы в SharePoint - тут представлена версия для SharePoint online
+      username: config.username, //если нужно on premise - посмотрите пример из документации к spsave - https://github.com/s-KaiNet/spsave#samples
       password: config.password,
       siteUrl: config.siteUrl,
       folder: config.folder
     }));
 });
 
-gulp.task('watch', function() {
-  gulp.watch('./src/**/*', ['copyToSharePoint']);
+gulp.task('watch', function() { 
+  gulp.watch('./src/**/*', ['copyToSharePoint']); //при изменении файлов в src будет запускать copyToSharePoint
 });
