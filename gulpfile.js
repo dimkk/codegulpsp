@@ -28,7 +28,7 @@ gulp.task("copyToSharePoint", ["clean", "src", "other"], function () { //Зад�
   return gulp.src("./dist/**/*")
     .pipe(spsave({ //плагин позволяющий авторизовываться и записывать файлы в SharePoint - тут представлена версия для SharePoint online
       username: config.username, //если нужно on premise - посмотрите пример из документации к spsave - https://github.com/s-KaiNet/spsave#samples
-      password: config.password,
+      password: config.password, //сюда соответственно подставляем свои логин и пароль
       siteUrl: config.siteUrl,
       folder: config.folder
     }));
